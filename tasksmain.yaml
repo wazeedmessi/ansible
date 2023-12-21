@@ -1,0 +1,61 @@
+---
+# tasks file for roles/nginxrole
+- name: update cache on the server
+  apt:
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Upgrade all the package on the current system
+  apt:
+    name: "*"
+    state: latest
+  when: ansible_os_family == "Debian"
+
+- name: Install nginx server
+  apt:
+    name: "nginx"
+  when: ansible_os_family == "Debian"
+
+- name: Copy default configure file
+  template:
+    src: "default.j2"
+    dest: "/etc/nginx/sites-available/default"
+  notify: "Start nginx service"
+
+- name: Custom index file to www folder
+  copy:
+    src: "index.html"
+    dest: "/var/www/html"
+  notify: "Start nginx service"
+
+- name: Custom index file to usr folder
+  copy:
+    src: "index.html"
+    dest: "/usr/share/nginx/html"
+  notify: "Start nginx service"
+
+- name: Enable nginx service
+  systemd_service:
+    name: nginx
+    enabled: true
+
+- name: check if file exit
+  shell: "ls -l wazeedmessi"
+  tags:
+    - execute
+  when: cmd_ls.rc == 2
+  ignore_errors: true
+  register: cmd_ls
+
+- name: dbug command output
+  debug:
+    var: cmd_ls
+  tags:
+    - execute
+
+- name: create a file wazeedmessi
+  file:
+    path: wazeedmessi
+    state: touch
+  tags:
+    - execute

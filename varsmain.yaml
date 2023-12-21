@@ -1,0 +1,5 @@
+---
+# vars file for roles/nginxrole
+nginx_port: 9066
+  #  vars_files:
+  # - ../nginxport.yaml
