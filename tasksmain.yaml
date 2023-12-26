@@ -39,7 +39,7 @@
     name: nginx
     enabled: true
 
-- name: check if file exit
+- name: check if file exist
   shell: "ls -l wazeedmessi"
   tags:
     - execute
@@ -53,9 +53,19 @@
   tags:
     - execute
 
+
 - name: create a file wazeedmessi
+  stat:
+    path: wazeedmessi
+  register: file_info
+  tags:
+    - execute
+
+
+- name: create a file wazeedmessi if only it doesn't exist
   file:
     path: wazeedmessi
     state: touch
   tags:
     - execute
+  when: file_info.stat.exists == false
